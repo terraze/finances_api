@@ -11,6 +11,24 @@
 |
 */
 
+Route::group(array('prefix' => 'api'), function()
+{
+
+    Route::get('/', function () {
+        return response()->json(
+            [
+                'data' =>
+                [
+                    'message' => "Welcome to WarTech Cardgame API"
+                ],
+                'success' => true
+            ]
+        );
+    });
+
+    Route::resource('info', 'InfoController');
+});
+
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('api');
 });
