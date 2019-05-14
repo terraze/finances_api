@@ -27,6 +27,10 @@ Route::group(array('prefix' => 'api'), function()
     });
 
     Route::resource('info', 'InfoController');
+    Route::group(array('prefix' => 'game'), function()
+    {
+        Route::resource('card', 'Game\CardController');
+    });
 });
 
 Route::get('/', function () {

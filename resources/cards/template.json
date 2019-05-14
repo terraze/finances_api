@@ -1,0 +1,59 @@
+{
+  "id": 0,
+  "key": "template",
+  "name": "Card name",
+  "description": "Card short description",
+  "type": "base|military-unit|military-structre|tactical|resource-energy|resource-metal",
+  "faction": "none",
+  "energy_cost": 0,
+  "metal_cost": 0,
+  "energy_upkeep": 0,
+  "hp": 0,
+  "damage": 0,
+  "min-range": 0,
+  "max-range": 0,
+  "tier":0,
+  "rarity": 0.9,
+  "effects":[
+    {
+      "key": "overcharge",
+      "energy-cost": 0,
+      "damage-multiplier": 1
+    },
+    {
+      "key": "haste"
+    },
+    {
+      "key": "anti-missile",
+      "missiles-per-turn": 1
+    },
+    {
+      "key": "auto-repair",
+      "hp-per-turn": 1
+    },
+    {
+      "key": "multichoice",
+      "choices": 1,
+      "options": [
+        {
+          "key": "has-haste"
+        },
+        {
+          "key": "repair-base",
+          "repair-amount": 2
+        }
+      ]
+    },
+    {
+      "key": "trigger",
+      "when": "end-of-opponent-turn",
+      "effects": [
+        {
+          "key": "build",
+          "what": 1,
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}
