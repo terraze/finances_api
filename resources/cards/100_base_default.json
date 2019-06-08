@@ -1,0 +1,18 @@
+{
+  "id": 100,
+  "key": "default_base",
+  "name": "Default Base",
+  "description": "Command Center",
+  "type": "base",
+  "faction": "none",
+  "energy_cost": 0,
+  "metal_cost": 0,
+  "energy_upkeep": 0,
+  "hp": 25,
+  "damage": 0,
+  "min-range": 0,
+  "max-range": 0,
+  "tier":0,
+  "rarity": 1,
+  "effects":[]
+}

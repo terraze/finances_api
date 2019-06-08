@@ -1,0 +1,18 @@
+{
+  "id": 1,
+  "key": "rumble",
+  "name": "Rumble",
+  "description": "Combat Vehicle",
+  "type": "military-unit",
+  "faction": "none",
+  "energy_cost": 1,
+  "metal_cost": 1,
+  "energy_upkeep": 0,
+  "hp": 1,
+  "damage": 1,
+  "min-range": 1,
+  "max-range": 1,
+  "tier":1,
+  "rarity": 1,
+  "effects":[]
+}

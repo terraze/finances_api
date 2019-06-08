@@ -1,0 +1,158 @@
+{
+  "color": "green",
+  "base_id": 100,
+  "cards":[
+    {
+      "id": 1,
+      "quantity": 3
+    },
+    {
+      "id": 2,
+      "quantity": 1
+    },
+    {
+      "id": 4,
+      "quantity": 2
+    },
+    {
+      "id": 5,
+      "quantity": 2
+    },
+    {
+      "id": 6,
+      "quantity": 2
+    },
+    {
+      "id": 8,
+      "quantity": 2
+    },
+    {
+      "id": 9,
+      "quantity": 1
+    },
+    {
+      "id": 10,
+      "quantity": 2
+    },
+    {
+      "id": 11,
+      "quantity": 2
+    },
+    {
+      "id": 13,
+      "quantity": 1
+    },
+    {
+      "id": 14,
+      "quantity": 1
+    },
+    {
+      "id": 15,
+      "quantity": 2
+    },
+    {
+      "id": 16,
+      "quantity": 1
+    },
+    {
+      "id": 17,
+      "quantity": 1
+    },
+    {
+      "id": 18,
+      "quantity": 2
+    },
+    {
+      "id": 19,
+      "quantity": 2
+    },
+    {
+      "id": 22,
+      "quantity": 3
+    },
+    {
+      "id": 23,
+      "quantity": 2
+    },
+    {
+      "id": 25,
+      "quantity": 2
+    },
+    {
+      "id": 26,
+      "quantity": 1
+    },
+    {
+      "id": 27,
+      "quantity": 3
+    },
+    {
+      "id": 28,
+      "quantity": 2
+    },
+    {
+      "id": 30,
+      "quantity": 2
+    },
+    {
+      "id": 31,
+      "quantity": 2
+    },
+    {
+      "id": 32,
+      "quantity": 2
+    },
+    {
+      "id": 33,
+      "quantity": 1
+    },
+    {
+      "id": 34,
+      "quantity": 2
+    },
+    {
+      "id": 35,
+      "quantity": 3
+    },
+    {
+      "id": 38,
+      "quantity": 3
+    },
+    {
+      "id": 39,
+      "quantity": 2
+    },
+    {
+      "id": 40,
+      "quantity": 2
+    },
+    {
+      "id": 41,
+      "quantity": 2
+    },
+    {
+      "id": 42,
+      "quantity": 1
+    },
+    {
+      "id": 43,
+      "quantity": 1
+    },
+    {
+      "id": 44,
+      "quantity": 3
+    },
+    {
+      "id": 45,
+      "quantity": 2
+    },
+    {
+      "id": 46,
+      "quantity": 1
+    },
+    {
+      "id": 47,
+      "quantity": 1
+    }
+  ]
+}
