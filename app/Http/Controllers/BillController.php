@@ -13,6 +13,7 @@ class BillController extends Controller
         $bills = Bill::all();
         foreach($bills as $bill){
             $item = [];
+            $item['id'] = $bill->id;
             $item['name'] = $bill->name;
             $item['value'] = $bill->value;
             $item['day'] = $bill->day;
