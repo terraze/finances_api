@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'WartechApi'),
+    'name' => env('APP_NAME', 'TerraFinance'),
 
     /*
     |--------------------------------------------------------------------------
@@ -62,7 +62,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://localhost/terra_finance_api'),
 
     'asset_url' => env('ASSET_URL', null),
 

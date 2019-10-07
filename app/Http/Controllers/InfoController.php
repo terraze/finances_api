@@ -12,7 +12,7 @@ class InfoController extends Controller
             [
                 'data' =>
                     [
-                        'game' => "WarTech Cardgame",
+                        'app' => "Terra Finance API",
                         'version' => config('app.version'),
                         'creator' => "José Ricardo Terra",
                         'creator_email' => "josericardojunior@gmail.com",
