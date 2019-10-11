@@ -238,4 +238,6 @@ return [
 
     ],
 
+    'dollars_per_hour' => 30,
+
 ];
