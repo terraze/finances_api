@@ -15,3 +15,4 @@ Route::get('/', function () {
 Route::resource('account', 'AccountController');
 Route::resource('bill', 'BillController');
 Route::resource('transaction', 'TransactionController');
+Route::resource('importer', 'ImportController');
