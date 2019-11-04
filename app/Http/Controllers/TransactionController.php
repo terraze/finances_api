@@ -157,6 +157,9 @@ class TransactionController extends Controller
             if(!is_numeric($transaction->date)){
                 $transaction->date = Carbon::create($transaction->date)->timestamp;
             }
+            if($transaction->paid_date == null){
+                $transaction->paid_date = 0;
+            }
             if(!is_numeric($transaction->paid_date)){
                 $transaction->paid_date = Carbon::create($transaction->paid_date)->timestamp;
             }
