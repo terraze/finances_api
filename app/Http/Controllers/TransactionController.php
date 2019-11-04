@@ -153,7 +153,13 @@ class TransactionController extends Controller
             }
 
             $transaction->date = $input->date;
-            $transaction->paid_date = (int)$input->paid_date;
+            $transaction->paid_date = $input->paid_date;
+            if(!is_numeric($transaction->date)){
+                $transaction->date = Carbon::create($transaction->date)->timestamp;
+            }
+            if(!is_numeric($transaction->paid_date)){
+                $transaction->paid_date = Carbon::create($transaction->paid_date)->timestamp;
+            }
             if(isset($input->bill_id) && (int)$input->bill_id) {
                 $transaction->bill_id = (int)$input->bill_id;
             }
