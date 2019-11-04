@@ -2,15 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Bill;
 use App\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class TransactionController extends Controller
 {
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index(Request $request)
     {
         $debug = false;
+        $year = Carbon::now()->year;
+        $month = Carbon::now()->month;
+        $nextMonth = Carbon::now()->addMonth()->month;
 
         $result = [];
         $query = Transaction::query();
@@ -29,6 +39,9 @@ class TransactionController extends Controller
         $startDate = (int)$request->input('startDate');
         if($startDate > 0){
             $query->where('date', '>=', $startDate);
+            $year = Carbon::createFromTimestamp($startDate)->year;
+            $month = Carbon::createFromTimestamp($startDate)->month;
+            $nextMonth = Carbon::createFromTimestamp($startDate)->addMonth()->month;
         }
 
         $endDate = (int)$request->input('endDate');
@@ -42,6 +55,9 @@ class TransactionController extends Controller
             dd(DB::getQueryLog());
             die;
         }
+
+        $bills = $this->getBills($account_id, $year, $month);
+        $billsNextMonth = $this->getBills($account_id, $year, $nextMonth);
 
         $transactions = $query->get();
 
@@ -58,15 +74,35 @@ class TransactionController extends Controller
             $item['paid_date'] = $transaction->paid_date;
             $item['account_id'] = $transaction->account_id;
             $item['bill_id'] = $transaction->bill_id;
-            $item['is_fixed'] = false; // TODO change
+            $item['is_fixed'] = false;
+            if($this->isBillPaid($bills, $transaction)){
+                unset($bills[$transaction->name]);
+                $item['is_fixed'] = true;
+            }
+            if($this->isBillPaid($billsNextMonth, $transaction)){
+                unset($billsNextMonth[$transaction->name]);
+                $item['is_fixed'] = true;
+            }
+
+            // Exceções temporárias para transações semanais
+            if (
+                $transaction->name == "Salário Semanal" ||
+                $transaction->name == "Cartões Pessoais" ||
+                $transaction->name == "Faxina"
+            ) {
+                $item['is_fixed'] = true;
+            }
             $result[] = $item;
         }
 
-        // TODO:
-        /**
-         * 4) Delete via React
-         * 6) Load CSV
-         */
+        foreach($bills as $bill){
+            $result[] = $bill;
+        }
+
+        // Para a última semana:
+        foreach($billsNextMonth as $bill){
+            $result[] = $bill;
+        }
 
         return response()->json(
             [
@@ -76,6 +112,10 @@ class TransactionController extends Controller
         );
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request){
         $content = json_decode($request->getContent());
         $result = [];
@@ -132,5 +172,53 @@ class TransactionController extends Controller
                 'success' => true
             ]
         );
+    }
+
+    /**
+     * @param $account_id
+     * @param $year
+     * @param $month
+     * @return array
+     */
+    private function getBills($account_id, $year, $month)
+    {
+        $result = [];
+        $bills = Bill::all();
+        foreach($bills as $bill){
+            $item = [];
+            $item['id'] = null;
+            $item['name'] = $bill->name;
+            $item['value'] = $bill->value*(-1);
+
+            $item['is_entrance'] = false;
+            $item['is_salary'] = false;
+
+            $day = $bill->day;
+
+            $item['date'] = Carbon::create($year,$month,$day, 0, 0, 0, 'America/Sao_Paulo')->timestamp;
+            $item['paid_date'] = null;
+            $item['account_id'] = $account_id;
+            $item['bill_id'] = $bill->id;
+            $item['is_fixed'] = true;
+            $result[$bill->name] = $item;
+        }
+        return $result;
+    }
+
+    /**
+     * @param $bills
+     * @param $name
+     * @return bool
+     */
+    private function isBillPaid($bills, $transaction)
+    {
+        if(isset($bills[$transaction->name])){
+            $transactionMonth = Carbon::createFromTimestamp($transaction->date)->month;
+            $billMonth = Carbon::createFromTimestamp($bills[$transaction->name]['date'])->month;
+            if($transactionMonth == $billMonth){
+                return true;
+            }
+        }
+        return false;
     }
 }
