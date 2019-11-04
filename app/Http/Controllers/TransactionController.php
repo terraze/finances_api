@@ -192,7 +192,9 @@ class TransactionController extends Controller
     private function getBills($account_id, $year, $month)
     {
         $result = [];
-        $bills = Bill::all();
+        $query = Bill::query();
+        $query->where('account_id',$account_id);
+        $bills = $query->get();
         foreach($bills as $bill){
             $item = [];
             $item['id'] = null;
