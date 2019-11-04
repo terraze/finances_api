@@ -75,8 +75,14 @@ class TransactionController extends Controller
             $item['value'] = $transaction->value;
             $item['dollar'] = $transaction->dollar;
             $item['worked_hours'] = $transaction->worked_hours;
-            $item['date'] = $transaction->date;
-            $item['paid_date'] = $transaction->paid_date;
+
+            // Ajuste para garantir data correta independente de timezone
+            $item['date'] = Carbon::createFromTimestamp($transaction->date)->addHours(12)->timestamp;
+            if($transaction->paid_date > 0) {
+                $item['paid_date'] = Carbon::createFromTimestamp($transaction->paid_date)->addHours(12)->timestamp;
+            } else {
+                $item['paid_date'] = $transaction->paid_date;
+            }
             $item['account_id'] = $transaction->account_id;
             $item['bill_id'] = $transaction->bill_id;
             $item['is_fixed'] = false;
