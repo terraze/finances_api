@@ -10,7 +10,10 @@ class BillController extends Controller
     public function index()
     {
         $result = [];
-        $bills = Bill::all();
+        $query = Bill::query();
+        $query->orderBy('day', 'asc');
+        $bills = $query->get();
+
         foreach($bills as $bill){
             $item = [];
             $item['id'] = $bill->id;
