@@ -67,6 +67,11 @@ class TransactionController extends Controller
             $item['name'] = $transaction->name;
             $item['is_entrance'] = $transaction->is_entrance;
             $item['is_salary'] = $transaction->is_salary;
+
+            if(!$transaction->is_entrance && $transaction->value > 0){
+                $transaction->value = $transaction->value*(-1);
+            }
+
             $item['value'] = $transaction->value;
             $item['dollar'] = $transaction->dollar;
             $item['worked_hours'] = $transaction->worked_hours;
@@ -88,6 +93,9 @@ class TransactionController extends Controller
             if (
                 $transaction->name == "Salário Semanal" ||
                 $transaction->name == "Cartões Pessoais" ||
+                $transaction->name == "Acupuntura" ||
+                $transaction->name == "Conta-Corrente" ||
+                $transaction->name == "Poupança" ||
                 $transaction->name == "Faxina"
             ) {
                 $item['is_fixed'] = true;
