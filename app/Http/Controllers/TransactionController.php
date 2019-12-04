@@ -26,7 +26,6 @@ class TransactionController extends Controller
         $query = Transaction::query();
 
         $query->orderBy('is_entrance', 'desc')
-            ->orderBy('is_salary', 'desc')
             ->orderByRaw('CASE WHEN paid_date > 0 THEN 0 ELSE 1 END')
             ->orderBy('paid_date')
             ->orderBy('date');
@@ -66,15 +65,12 @@ class TransactionController extends Controller
             $item['id'] = $transaction->id;
             $item['name'] = $transaction->name;
             $item['is_entrance'] = $transaction->is_entrance;
-            $item['is_salary'] = $transaction->is_salary;
 
-            if(!$transaction->is_entrance && $transaction->value > 0){
+            if((!$transaction->is_entrance && $transaction->value > 0) || ($transaction->is_entrance && $transaction->value < 0)){
                 $transaction->value = $transaction->value*(-1);
             }
 
             $item['value'] = $transaction->value;
-            $item['dollar'] = $transaction->dollar;
-            $item['worked_hours'] = $transaction->worked_hours;
 
             // Ajuste para garantir data correta independente de timezone
             $item['date'] = Carbon::createFromTimestamp($transaction->date)->addHours(12)->timestamp;
@@ -155,16 +151,6 @@ class TransactionController extends Controller
             $transaction->name = $input->name;
             $transaction->is_entrance = $input->is_entrance;
             $transaction->value = $input->value;
-            if($input->is_entrance){
-                if(isset($input->is_salary) && $input->is_salary){
-                    $transaction->is_salary = $input->is_salary;
-                    $transaction->dollar = $input->dolar;
-                    $transaction->worked_hours = $input->worked_hours;
-                    $transaction->value = env('app.dollars_per_hour') * $input->dolar * $input->worked_hours;
-                }
-            } else {
-                $transaction->is_salary = false;
-            }
 
             $transaction->date = $this->handleDate($input->date);
             $transaction->paid_date = $this->handleDate($input->paid_date);
