@@ -166,17 +166,9 @@ class TransactionController extends Controller
                 $transaction->is_salary = false;
             }
 
-            $transaction->date = $input->date;
-            $transaction->paid_date = $input->paid_date;
-            if(!is_numeric($transaction->date)){
-                $transaction->date = Carbon::create($transaction->date)->timestamp;
-            }
-            if($transaction->paid_date == null){
-                $transaction->paid_date = 0;
-            }
-            if(!is_numeric($transaction->paid_date)){
-                $transaction->paid_date = Carbon::create($transaction->paid_date)->timestamp;
-            }
+            $transaction->date = $this->handleDate($input->date);
+            $transaction->paid_date = $this->handleDate($input->paid_date);
+
             if(isset($input->bill_id) && (int)$input->bill_id) {
                 $transaction->bill_id = (int)$input->bill_id;
             }
@@ -195,6 +187,22 @@ class TransactionController extends Controller
                 'success' => true
             ]
         );
+    }
+
+    /**
+     * @param $date
+     * @return int
+     */
+    private function handleDate($date)
+    {
+        if($date == null){
+            return 0;
+        }
+        if(!is_numeric($date)){
+            $date = Carbon::create($date)->timestamp;
+        }
+        $date -= 10800; // 3 horas
+        return $date;
     }
 
     /**
