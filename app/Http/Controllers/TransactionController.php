@@ -35,7 +35,7 @@ class TransactionController extends Controller
             $query->where('account_id',$account_id);
         }
 
-        $startDate = (int)$request->input('startDate');
+        $startDate = $this->getDate($request->input('startDate'));
         if($startDate > 0){
             $query->where('date', '>=', $startDate);
             $year = Carbon::createFromTimestamp($startDate)->year;
@@ -43,7 +43,7 @@ class TransactionController extends Controller
             $nextMonth = Carbon::createFromTimestamp($startDate)->addMonth()->month;
         }
 
-        $endDate = (int)$request->input('endDate');
+        $endDate = $this->getDate($request->input('endDate'));
         if($endDate > 0){
             $query->where('date', '<=', $endDate);
         }
@@ -73,9 +73,9 @@ class TransactionController extends Controller
             $item['value'] = $transaction->value;
 
             // Ajuste para garantir data correta independente de timezone
-            $item['date'] = Carbon::createFromTimestamp($transaction->date)->addHours(12)->timestamp;
+            $item['date'] = Carbon::createFromTimestamp($transaction->date)->timestamp;
             if($transaction->paid_date > 0) {
-                $item['paid_date'] = Carbon::createFromTimestamp($transaction->paid_date)->addHours(12)->timestamp;
+                $item['paid_date'] = Carbon::createFromTimestamp($transaction->paid_date)->timestamp;
             } else {
                 $item['paid_date'] = $transaction->paid_date;
             }
@@ -152,8 +152,8 @@ class TransactionController extends Controller
             $transaction->is_entrance = $input->is_entrance;
             $transaction->value = $input->value;
 
-            $transaction->date = $this->handleDate($input->date);
-            $transaction->paid_date = $this->handleDate($input->paid_date);
+            $transaction->date = $this->getDate($input->date);
+            $transaction->paid_date = $this->getDate($input->paid_date);
 
             if(isset($input->bill_id) && (int)$input->bill_id) {
                 $transaction->bill_id = (int)$input->bill_id;
@@ -173,22 +173,6 @@ class TransactionController extends Controller
                 'success' => true
             ]
         );
-    }
-
-    /**
-     * @param $date
-     * @return int
-     */
-    private function handleDate($date)
-    {
-        if($date == null){
-            return 0;
-        }
-        if(!is_numeric($date)){
-            $date = Carbon::create($date)->timestamp;
-        }
-        $date -= 10800; // 3 horas
-        return $date;
     }
 
     /**
@@ -239,5 +223,15 @@ class TransactionController extends Controller
             }
         }
         return false;
+    }
+
+    // TODO move to a middleware?
+    private function getDate($date)
+    {
+        if(!$date){
+            return 0;
+        }
+        $date = Carbon::createFromFormat('Y-m-d', substr($date, 0, 10));
+        return $date->timestamp;
     }
 }
