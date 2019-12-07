@@ -25,7 +25,9 @@ class TransactionController extends Controller
         $result = [];
         $query = Transaction::query();
 
-        $query->orderBy('is_entrance', 'desc')
+        $query
+            ->orderByRaw('CASE WHEN bill_id IS NULL THEN 1 ELSE 0 END')
+            ->orderBy('is_entrance', 'desc')
             ->orderByRaw('CASE WHEN paid_date > 0 THEN 0 ELSE 1 END')
             ->orderBy('paid_date')
             ->orderBy('date');
@@ -37,7 +39,13 @@ class TransactionController extends Controller
 
         $startDate = $this->getDate($request->input('startDate'));
         if($startDate > 0){
-            $query->where('date', '>=', $startDate);
+            $query->where(function($q) use ($startDate){
+                $q->where(function($q2) use ($startDate){
+                    $q2->where('paid_date', '=', 0)
+                        ->where('date', '>=', $startDate);
+                })
+                    ->orWhere('paid_date', '>=', $startDate);
+            });
             $year = Carbon::createFromTimestamp($startDate)->year;
             $month = Carbon::createFromTimestamp($startDate)->month;
             $nextMonth = Carbon::createFromTimestamp($startDate)->addMonth()->month;
@@ -45,7 +53,13 @@ class TransactionController extends Controller
 
         $endDate = $this->getDate($request->input('endDate'));
         if($endDate > 0){
-            $query->where('date', '<=', $endDate);
+            $query->where(function($q) use ($endDate){
+                $q->where(function($q2) use ($endDate){
+                    $q2->where('paid_date', '=', 0)
+                        ->where('date', '<=', $endDate);
+                })
+                    ->orWhere('paid_date', '<=', $endDate);
+            });
         }
 
         if($debug) {
@@ -57,6 +71,8 @@ class TransactionController extends Controller
 
         $bills = $this->getBills($account_id, $year, $month);
         $billsNextMonth = $this->getBills($account_id, $year, $nextMonth);
+
+        // TODO: bills devem vir no meio entre PAGAS e EXTRAS
 
         $transactions = $query->get();
 
@@ -185,9 +201,14 @@ class TransactionController extends Controller
     {
         $result = [];
         $query = Bill::query();
-        $query->where('account_id',$account_id);
+        $query->select('bill.id', 'bill.name', 'bill.value', 'bill.day', DB ::raw('MONTH(from_unixtime(transaction.date)) as paid_month'));
+        $query->where('bill.account_id',$account_id);
+        $query->leftJoin('transaction', 'bill.id', '=', 'transaction.bill_id');
         $bills = $query->get();
         foreach($bills as $bill){
+            if($bill['paid_month'] && $bill['paid_month'] == $month){
+                continue;
+            }
             $item = [];
             $item['id'] = null;
             $item['name'] = $bill->name;
