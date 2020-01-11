@@ -114,7 +114,8 @@ class TransactionController extends Controller
                 $transaction->name == "Acupuntura" ||
                 $transaction->name == "Conta-Corrente" ||
                 $transaction->name == "Poupança" ||
-                $transaction->name == "Faxina"
+                $transaction->name == "Faxina" ||
+                $transaction->name == "Psicanalista"
             ) {
                 $item['is_fixed'] = true;
             }
