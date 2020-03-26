@@ -253,7 +253,10 @@ class TransactionController extends Controller
         if(!$date){
             return 0;
         }
-        $date = Carbon::createFromFormat('Y-m-d', substr($date, 0, 10));
+        $year = substr($date, 0, 4);
+        $month = substr($date, 5, 2);
+        $day = substr($date, 8, 2);
+        $date = Carbon::create($year, $month, $day, 12, 0);
         return $date->timestamp;
     }
 }
